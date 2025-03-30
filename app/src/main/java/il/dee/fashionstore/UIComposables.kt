@@ -31,6 +31,10 @@ import il.dee.fashionstore.CarouselItem.Companion.bagToString
 import kotlinx.coroutines.time.delay
 import java.time.Duration
 
+
+
+
+
 @Composable
 fun ClotheDialog(carouselItemsList: List<CarouselItem>) {
     var showDialog by remember { mutableStateOf(false) }
@@ -116,7 +120,7 @@ fun Carousel(items: List<CarouselItem>, selectedItem: CarouselItem?, onItemClick
 fun CheckoutButton(onClick: () -> Unit) {
     Button(
         onClick = onClick,
-        modifier = Modifier.padding(top = 470.dp, start = 200.dp)
+        modifier = Modifier.padding(top = 420.dp, start = 200.dp)
     ) {
         Text(text = "Checkout")
     }
@@ -209,7 +213,7 @@ fun FilterClothes(onFilteredClothes: (List<CarouselItem>) -> Unit) {
         Column(
             modifier = Modifier
                 .align(Alignment.BottomStart)
-                .padding(25.dp)
+
         ) {
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Checkbox(
