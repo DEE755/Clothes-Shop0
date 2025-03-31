@@ -2,7 +2,7 @@ package il.dee.fashionstore
 
 import android.content.res.Resources
 
-class CarouselItem(
+class ItemforSale(
     val description: String,
     val price: Double,
     val color: String,
@@ -10,25 +10,25 @@ class CarouselItem(
     val brand: Brand,
     val photo: String,
     var imageResId: Int = 0,
-    val ressources: Resources,
-    val packageName: String,
+    resources: Resources,
+    packageName: String,
     vararg val availlable_sizes: Size
 ) {
 
     var isInbag: Boolean = false
 
     companion object {
-        var list_of_clothes = mutableListOf<CarouselItem>()
-        var buying_bag_list = mutableListOf<CarouselItem>()
+        var list_of_clothes = mutableListOf<ItemforSale>()
+        var buying_bag_list = mutableListOf<ItemforSale>()
 
         var totalPrice: Double = 0.0
 
-        fun List<CarouselItem>.bagToString(): String {
+        fun List<ItemforSale>.bagToString(): String {
             return this.joinToString { it.description }
         }
     }
 
-    fun getListOfClothes(): List<CarouselItem> {
+    fun getListOfClothes(): List<ItemforSale> {
         return list_of_clothes
     }
 
@@ -36,6 +36,12 @@ class CarouselItem(
         buying_bag_list.add(this)
         totalPrice += this.price
         this.isInbag=true
+    }
+
+    fun removeFromBag() {
+        buying_bag_list.remove(this)
+        totalPrice -= this.price
+        this.isInbag=false
     }
 
     fun formatDescription(): String {
@@ -52,7 +58,7 @@ class CarouselItem(
 
 
     init {
-        this.imageResId = ressources.getIdentifier(this.photo, "drawable", packageName)
+        this.imageResId = resources.getIdentifier(this.photo, "drawable", packageName)
         list_of_clothes.add(this)
     }
 

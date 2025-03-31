@@ -1,5 +1,7 @@
 package il.dee.fashionstore
 
+
+// Brand class not fully used in the drill but useful for future implementations
 class Brand(
     val name: String,
     val logo: String,

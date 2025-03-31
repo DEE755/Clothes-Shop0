@@ -1,4 +1,19 @@
 <resources>
-    <string name="app_name">Fashion Store exercice</string>
-    <string name="app_title">The Clothes Shop</string>
+    <string name="app_name" translatable="false">Fashion Store exercice</string>
+    <string name="app_title" translatable="false">The Clothes Shop</string>
+    <string name="women">Women</string>
+    <string name="no_clothes_found">No clothes found</string>
+    <string name="remove_from_bag">Remove from bag</string>
+    <string name="return_to_shopping">Return to Shopping</string>
+    <string name="removal_confirmation">Removal Confirmation</string>
+    <string name="remove_confirmation_text">Are you sure you want to remove %1$s from your bag?</string>
+    <string name="checkout">Checkout</string>
+    <string name="add_to_bag">Add to the bag</string>
+    <string name="close">X</string>
+    <string name="added_to_bag">%1$s has been added to your bag!</string>
+    <string name="removed_from_bag">%1$s has been removed from your bag!</string>
+    <string name="process_to_payment">Process to Payment</string>
+    <string name="articles">Those are your articles:</string>
+    <string name="total_price">%1$s \n Total Price: %2$s $</string>
+    <string name="men">Men</string>
 </resources>

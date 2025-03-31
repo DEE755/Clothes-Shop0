@@ -7,7 +7,6 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.animateDpAsState
-
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
@@ -20,6 +19,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDecoration
@@ -38,28 +38,31 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             FashionStoreExerciceTheme {
+                //creating brands objects (not fully used in the drill but useful for future implementations)
                 val brand1 = Brand(
                     "Zara",
                     "zara_logo",
-                    "Zara is a Spanish apparel retailer based in Arteixo in Galicia. The company specializes in fast fashion, and products include clothing, accessories, shoes, swimwear, beauty, and perfumes."
+                    ""
                 )
                 val brand2 = Brand(
                     "H&M",
                     "hm_logo",
-                    "H&M is a Swedish multinational clothing-retail company known for its fast-fashion clothing for men, women, teenagers, and children."
+                    ""
                 )
                 val brand3 = Brand(
                     "Gap",
                     "gap_logo",
-                    "Gap is an American worldwide clothing and accessories retailer."
+                    ""
                 )
                 val brand4 = Brand(
                     "Forever 21",
                     "forever21_logo",
-                    "Forever 21 is an American fast fashion retailer headquartered in Los Angeles, California."
+                    ""
                 )
 
-                val clothe1 = CarouselItem(
+                //creating clothes objects
+
+                val clothe1 = ItemforSale(
                     "Flower Dress",
                     100.0,
                     "White",
@@ -69,11 +72,11 @@ class MainActivity : ComponentActivity() {
                     0,
                     resources,
                     packageName,
-                    CarouselItem.Size.S,
-                    CarouselItem.Size.M,
-                    CarouselItem.Size.XXL
+                    ItemforSale.Size.S,
+                    ItemforSale.Size.M,
+                    ItemforSale.Size.XXL
                 )
-                val clothe2 = CarouselItem(
+                val clothe2 = ItemforSale(
                     "Scrapped Jeans",
                     200.0,
                     "Blue",
@@ -83,9 +86,9 @@ class MainActivity : ComponentActivity() {
                     0,
                     resources,
                     packageName,
-                    CarouselItem.Size.S
+                    ItemforSale.Size.S
                 )
-                val clothe3 = CarouselItem(
+                val clothe3 = ItemforSale(
                     "Nice Shirt",
                     199.99,
                     "Blue",
@@ -95,9 +98,9 @@ class MainActivity : ComponentActivity() {
                     0,
                     resources,
                     packageName,
-                    CarouselItem.Size.S
+                    ItemforSale.Size.S
                 )
-                val clothe4 = CarouselItem(
+                val clothe4 = ItemforSale(
                     "Elegant Coat",
                     199.99,
                     "Blue",
@@ -107,10 +110,10 @@ class MainActivity : ComponentActivity() {
                     0,
                     resources,
                     packageName,
-                    CarouselItem.Size.XS,
-                    CarouselItem.Size.XL
+                    ItemforSale.Size.XS,
+                    ItemforSale.Size.XL
                 )
-                val clothe5 = CarouselItem(
+                val clothe5 = ItemforSale(
                     "Casual Jeans",
                     50.0,
                     "Gray",
@@ -120,12 +123,12 @@ class MainActivity : ComponentActivity() {
                     0,
                     resources,
                     packageName,
-                    CarouselItem.Size.S,
-                    CarouselItem.Size.M,
-                    CarouselItem.Size.L,
-                    CarouselItem.Size.XXL
+                    ItemforSale.Size.S,
+                    ItemforSale.Size.M,
+                    ItemforSale.Size.L,
+                    ItemforSale.Size.XXL
                 )
-                val clothe6 = CarouselItem(
+                val clothe6 = ItemforSale(
                     "Winter Coat",
                     289.90,
                     "Red",
@@ -135,11 +138,11 @@ class MainActivity : ComponentActivity() {
                     0,
                     resources,
                     packageName,
-                    CarouselItem.Size.L,
-                    CarouselItem.Size.XL
+                    ItemforSale.Size.L,
+                    ItemforSale.Size.XL
                 )
 
-                var isPumped by remember { mutableStateOf(false) }
+                var isPumped by remember { mutableStateOf(false) } //used to animate the text
                 val color by animateColorAsState(
                     targetValue = if (isPumped) Color.Red else Color(0xFFE84FFC),
                     animationSpec = tween(durationMillis = 1000)
@@ -150,14 +153,13 @@ class MainActivity : ComponentActivity() {
                     animationSpec = tween(durationMillis = 500)
                 )
 
-
-
+                var filteredClothes by remember { mutableStateOf(listOf(clothe1, clothe2, clothe3, clothe4, clothe5, clothe6)) }
 
                 Scaffold(
                     topBar = {
                         TopAppBar(
                             title = {
-                                Text(
+                                Text(//Hardcoded text because name of the brand and its slogan should stay in english
                                     text = if (isPumped) "The Clothes Shop" else "The best place to buy your clothes",
                                     style = TextStyle(
                                         fontFamily = amoriaFontFamily,
@@ -175,26 +177,33 @@ class MainActivity : ComponentActivity() {
                         .fillMaxSize()
                         .padding(top = 55.dp, start = 10.dp, end = 10.dp)
                 ) {
-                    var filteredClothes by remember { mutableStateOf(CarouselItem.list_of_clothes) }
-
                     Box(
                         modifier = Modifier
                             .fillMaxSize()
                             .padding(bottom = 50.dp),
                         contentAlignment = Alignment.Center
-                    ) {
-                        FilterClothes(onFilteredClothes = { filteredClothes = it.toMutableList() })
-                        ClotheDialog(carouselItemsList = filteredClothes)
+                    ) {//filtering the clothes according to gender and preventing duplicates
+                        FilterClothes(onFilteredClothes = { newFilteredClothes ->
+                            val uniqueClothes = newFilteredClothes.distinctBy { it.description }
+                            filteredClothes = uniqueClothes
+                        })//displaying the carousel
+                        MainScreen(carouselItemsList = filteredClothes)
                         var showDialog by remember { mutableStateOf(false) }
+
+                        //displaying the checkout button
                         CheckoutButton(onClick = { showDialog = true })
                         if (showDialog) {
+                            val context = LocalContext.current
                             CheckoutDialog(
                                 onDismiss = { showDialog = false },
-                                onConfirm = { showDialog = false }
+                                onConfirm = {
+                                    showDialog = false
+                                        GeneralFunctions.gotoPaymentActivity(context)
+                                }
                             )
                         }
                     }
-                }
+                }//animating the text
                 LaunchedEffect(Unit) {
                     while (true) {
                         isPumped = !isPumped
